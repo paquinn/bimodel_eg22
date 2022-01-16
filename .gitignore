@@ -1,0 +1,16 @@
+.vscode
+__pycache__
+stats
+*.c
+!objectives_source.c
+*.o
+*.so
+*.s
+Release/
+*.pyd
+*.exp
+*.lib
+*.obj
+.DS_Store
+*.dot
+*.txt
