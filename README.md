@@ -1,68 +1,23 @@
-# BiModel
+# Differentiable 3D CAD Programs for Bidirectional Editing
 
-## Instalation and Setup
+This repository contains the reference implementation of the paper "Differentiable 3D CAD Programs for Bidirectional Editing", conditionally accepted to Eurographics 2022.
+
+Modern CAD tools represent 3D designs not only as geometry, but also as a program composed of geometric operations, each of which depends on a set of parameters. Program representations enable meaningful and controlled shape variations via parameter changes. However, achieving desired modifications solely through parameter editing is challenging when CAD models have not been explicitly authored to expose select degrees of freedom in advance.
+
+We introduce a novel bidirectional editing system for 3D CAD programs. In addition to editing the CAD program, users can directly manipulate 3D geometry and our system infers parameter updates to keep both representations in sync.
+
+We formulate inverse edits as a set of constrained optimization objectives, returning plausible updates to program parameters that both match user intent and maintain program validity. Our approach implements an automatically differentiable domain-specific language for CAD programs, providing derivatives for this optimization to be performed quickly on any expressed program.
+
+Our system enables rapid, interactive exploration of a constrained 3D design space by allowing users to manipulate the program and geometry interchangeably during design iteration. While our approach is not designed to optimize across changes in geometric topology, we show it is expressive and performant enough for users to produce a diverse set of design variants, even when the CAD program contains a relatively large number of parameters.
+
+## Installation and Setup
+
+Informally, the implementation is an extension meant to run in Blender. It uses a few external python dependencies (notably, Numpy, Scipy, and CFFI) in a Conda virtual environment. It has been built and tested with Blender 2.83 on Mac OS High Sierra and Catalina.
+
+The addon can be imported to blender by importing `__init__.py`.
+
+Detailed setup and dependency instructions coming soon.
 
 ## Language
 
-### Parameters
-Any lowercase value or tuple denotes a parameter that can be optimized for.
-
-Ex, `s = 3.0` or `x, y, z = 0.0, 0.0, 0.0`.
-
-Parameters can also refer to expressions of previous parameters.
-
-Ex, `y = m * sin(pi * (s + 1))`
-
-### Operations
-Operations take arguments as keywords.
-
-Ex, `Cube(size=s, location=(x, y, z))`.
-
-These arguments can also be expressions.
-
-Ex, `Extrude(length=3. * s, select=...)`.
-
-If an arguments is given as a constant, it is not optimized for.
-
-Ex, `Cube(size=3., location=(x, y, 0.0))`.
-
-Arguments can be omitted in which case the defaults shown bellow will be used.
-
-### Named verts
-
-All operations that create geometry can be assigned an uppercase name.
-
-Ex, `B1 = Box(size=1.0, location=(0.0, 0.0, 0.0))`.
-
-These names can then be used to select which vertices the operation will be based on.
-
-Ex, `E1 = Extrude(length=3.0, select=['v0@B1', 'v1@B1', 'v2@B1', 'v3@B1'])`.
-
-All operations that create geometry leave the new vertices selected for each of use. This allows for easily chaining operations.
-
-```
-Extrude(length=1.0, select=['f0@E1'])
-Resize(value=(2.0, 2.0, 2.0))
-Extrude(length=2.0)
-Resize(value=(3.0, 3.0, 3.0))
-...
-```
-
-
-### Mesh Primitives
-
-* `Cube`
-    - `location = (0.0, 0.0, 0.0)` 
-    - `size = 1.0`
-* `Grid`
-    - `location = (0.0, 0.0, 0.0)` 
-    - `size = 2.0`
-    - `subs = (2, 2)`
-        - Constant value.
-
-### Mesh Operations
-
-* `Extrude`
-    - `length = 1.0`
-    - `select`
-        - Can be one or more faces. Adjacent faces groups with the same normal will be connected.
+Please see the [Language Reference](/language-reference.md)
